@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace ChessWPF
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ChessBoardControl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ChessBoardControl : UserControl
     {
-        public MainWindow()
+        public ChessBoardControl()
         {
             InitializeComponent();
-            MainFrame.Content = new HomePage();
         }
     }
 }

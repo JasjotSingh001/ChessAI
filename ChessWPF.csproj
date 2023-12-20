@@ -5,6 +5,15 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>chess.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="chess.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="AI\" />
+  </ItemGroup>
 
 </Project>

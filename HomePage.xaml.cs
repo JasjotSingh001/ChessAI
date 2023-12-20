@@ -16,14 +16,22 @@ using System.Windows.Shapes;
 namespace ChessWPF
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for HomePage.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class HomePage : Page
     {
-        public MainWindow()
+        public HomePage()
         {
             InitializeComponent();
-            MainFrame.Content = new HomePage();
+        }
+        private void StartLocalGame_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new LocalGamePage());
+        }
+
+        private void StartAIGame_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new AIGamePage());
         }
     }
 }
