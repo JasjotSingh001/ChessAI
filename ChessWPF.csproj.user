@@ -30,6 +30,9 @@
     <Page Update="HomePage.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Images\XAML\PieceDictionary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="LocalGamePage.xaml">
       <SubType>Designer</SubType>
     </Page>

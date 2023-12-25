@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessWPF.Game;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,20 @@ namespace ChessWPF
     /// </summary>
     public partial class LocalGamePage : Page
     {
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private ChessGame Game;
+
         public LocalGamePage()
         {
+            logger.Info("Setting up game page");
             InitializeComponent();
+
+            Game = new ChessGame();
+        }
+
+        private void DrawInitialPosition()
+        {
+            ChessBoardControl.LoadPosition(Game.ChessBoard.GetBoard());
         }
     }
 }

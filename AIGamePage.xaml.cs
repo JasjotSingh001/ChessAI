@@ -20,6 +20,7 @@ namespace ChessWPF
     /// </summary>
     public partial class AIGamePage : Page
     {
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public AIGamePage()
         {
             InitializeComponent();

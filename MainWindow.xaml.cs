@@ -20,10 +20,19 @@ namespace ChessWPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public MainWindow()
         {
             InitializeComponent();
             MainFrame.Content = new HomePage();
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape && MainFrame.Content is not HomePage)
+            {
+                MainFrame.Content = new HomePage();
+            }
         }
     }
 }

@@ -20,6 +20,7 @@ namespace ChessWPF
     /// </summary>
     public partial class HomePage : Page
     {
+        private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public HomePage()
         {
             InitializeComponent();
