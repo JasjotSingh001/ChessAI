@@ -10,11 +10,22 @@ namespace ChessWPF.Game
     {
         private NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        public const string StartFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         public Board ChessBoard = new Board();
 
         public ChessGame()
         {
-            ChessBoard.LoadFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            ChessBoard.LoadFromFEN(StartFEN);
+        }
+
+        public bool CanMakeMove(int start, int end)
+        {
+            return true;
+        }
+
+        public void MakeMove()
+        {
+
         }
     }
 }

@@ -12,10 +12,12 @@ namespace ChessWPF.Game
 
         private int[] board = new int[64];
 
-        private bool canCastleKingside = true;
-        private bool canCastleQueenside = true;
-
-        private byte movesWithoutCaptureOrPawnMove = 0;
+        private bool CanWhiteCastleKingside = true;
+        private bool CanWhiteCastleQueenside = true;
+        private bool CanBlackCastleKingside = true;
+        private bool CanBlackCastleQueenside = true;
+        private bool WhiteToMove = true;
+        private byte MovesWithoutCaptureOrPawnMove = 0;
 
         //some way to figure out if repetition or 50 move rule
         public Board()
@@ -36,13 +38,11 @@ namespace ChessWPF.Game
             };
 
             String fenBoard = fen.Split(' ')[0];
-            logger.Info(fenBoard);
             int file = 0, rank = 7;
 
             for (int i = 0; i < fenBoard.Length; i++)
             {
                 char symbol = fenBoard[i];
-                logger.Info(symbol);
                 if (symbol == '/')
                 {
                     file = 0;
@@ -61,11 +61,16 @@ namespace ChessWPF.Game
                     }
                 }
             }
+        }
 
-            for (int i = 0; i < board.Length; i++)
-            {
-                logger.Info(i + ": " + board[i]);
-            }
+        public void MakeMove()
+        {
+
+        }
+
+        public void UnmakeMove()
+        {
+
         }
 
         public int[] GetBoard()

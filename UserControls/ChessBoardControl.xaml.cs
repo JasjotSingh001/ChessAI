@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 
 namespace ChessWPF
 {
@@ -29,8 +30,7 @@ namespace ChessWPF
         private SolidColorBrush LightColorBrush = (SolidColorBrush) new BrushConverter().ConvertFrom("#F1D9B4");
         private SolidColorBrush DarkColorBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#B48963");
 
-        private List<int> PiecesOnBoard = new List<int>();
-        private bool FromWhitePerspective = true;
+        private bool FromWhitePerspective = false;
 
         private DrawingImage bPDrawingImage;
         private DrawingImage bNDrawingImage;
@@ -82,31 +82,12 @@ namespace ChessWPF
                 nextSquareToFillIsLight = !nextSquareToFillIsLight;
                 nextX++;
             }
-
-            ChessGame Game = new ChessGame();
-            LoadPosition(Game.ChessBoard.GetBoard());
-        }
-
-        private void SetupDrawingImages()
-        {
-            bPDrawingImage = (DrawingImage)FindResource("bPDrawingImage");
-            bNDrawingImage = (DrawingImage)FindResource("bNDrawingImage");
-            bBDrawingImage = (DrawingImage)FindResource("bBDrawingImage");
-            bRDrawingImage = (DrawingImage)FindResource("bRDrawingImage");
-            bQDrawingImage = (DrawingImage)FindResource("bQDrawingImage");
-            bKDrawingImage = (DrawingImage)FindResource("bKDrawingImage");
-
-            wPDrawingImage = (DrawingImage)FindResource("wPDrawingImage");
-            wNDrawingImage = (DrawingImage)FindResource("wNDrawingImage");
-            wBDrawingImage = (DrawingImage)FindResource("wBDrawingImage");
-            wRDrawingImage = (DrawingImage)FindResource("wRDrawingImage");
-            wQDrawingImage = (DrawingImage)FindResource("wQDrawingImage");
-            wKDrawingImage = (DrawingImage)FindResource("wKDrawingImage");
         }
 
         public void LoadPosition(int[] board)
         {
             logger.Info("Loading position");
+
             for (int i = 0; i < 64; i++)
             {
                 int row, column;
@@ -117,7 +98,7 @@ namespace ChessWPF
                 } else
                 {
                     row = i / 8;
-                    column = i % 8;
+                    column = 7 - (i % 8);
                 }
 
                 Image image = new Image();
@@ -174,14 +155,76 @@ namespace ChessWPF
                 }
 
                 ChessBoardGrid.Children.Add(image);
-                Grid.SetRow(image, row);
                 Grid.SetColumn(image, column);
+                Grid.SetRow(image, row);
             }
         }
 
-        private void ChessBoardGrid_Loaded(object sender, RoutedEventArgs e)
+        public void MovePiece(int startIndex, int endIndex)
         {
-            SetupBoard();
+            int[] startColumnRow = ConvertIndexToColumnRow(startIndex);
+            int[] endColumnRow = ConvertIndexToColumnRow(endIndex);
+
+            logger.Info("Start: " + startColumnRow[0] + " " + startColumnRow[1]);
+            logger.Info("End: " + endColumnRow[0] + " " + endColumnRow[1]);
+        }
+
+        public int Grid_HitTest (MouseEventArgs e)
+        {
+            UIElement element = (UIElement)ChessBoardGrid.InputHitTest(e.GetPosition(ChessBoardGrid));
+
+            int column = Grid.GetColumn(element);
+            int row = Grid.GetRow(element);
+
+            logger.Info(column + " " + row);
+            logger.Info("Conversion: " + ConvertColumnRowToIndex(column, row));
+
+            return ConvertColumnRowToIndex(column, row);
+        }
+
+        private int ConvertColumnRowToIndex(int column, int row)
+        {
+            if (FromWhitePerspective)
+            {
+                row = 7 - row;
+                return (8 * row) + column;
+            }
+
+            column = 7 - column;
+            return (8 * row) + column;
+        }
+
+        private int[] ConvertIndexToColumnRow(int index)
+        {
+            int column, row;
+            if (FromWhitePerspective)
+            {
+                column = index % 8;
+                row = 7 - (index / 8);
+
+                return new int[] { column, row };
+            }
+            column = 7 - (index % 8);
+            row = index / 8;
+
+            return new int[] { column, row };
+        }
+
+        private void SetupDrawingImages()
+        {
+            bPDrawingImage = (DrawingImage)FindResource("bPDrawingImage");
+            bNDrawingImage = (DrawingImage)FindResource("bNDrawingImage");
+            bBDrawingImage = (DrawingImage)FindResource("bBDrawingImage");
+            bRDrawingImage = (DrawingImage)FindResource("bRDrawingImage");
+            bQDrawingImage = (DrawingImage)FindResource("bQDrawingImage");
+            bKDrawingImage = (DrawingImage)FindResource("bKDrawingImage");
+
+            wPDrawingImage = (DrawingImage)FindResource("wPDrawingImage");
+            wNDrawingImage = (DrawingImage)FindResource("wNDrawingImage");
+            wBDrawingImage = (DrawingImage)FindResource("wBDrawingImage");
+            wRDrawingImage = (DrawingImage)FindResource("wRDrawingImage");
+            wQDrawingImage = (DrawingImage)FindResource("wQDrawingImage");
+            wKDrawingImage = (DrawingImage)FindResource("wKDrawingImage");
         }
     }
 }

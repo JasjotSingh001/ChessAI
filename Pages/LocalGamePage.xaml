@@ -14,6 +14,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="0.15*" />
         </Grid.RowDefinitions>
-        <local:ChessBoardControl x:Name="ChessBoardControl" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Grid.Row="1"></local:ChessBoardControl>
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Foreground="White">Local Game</TextBlock>
+        <local:ChessBoardControl x:Name="ChessBoardControl" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Grid.Row="1" Loaded="ChessBoardControl_Loaded"></local:ChessBoardControl>
     </Grid>
 </Page>

@@ -9,11 +9,11 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Images/XAML/PieceDictionary.xaml" />
+                <ResourceDictionary Source="../Images/XAML/PieceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid x:Name="ChessBoardGrid" Background="White" Loaded="ChessBoardGrid_Loaded">
+    <Grid x:Name="ChessBoardGrid" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />

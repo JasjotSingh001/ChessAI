@@ -7,33 +7,33 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="AIGamePage.xaml.cs">
+    <Compile Update="Pages\AIGamePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="ChessBoardControl.xaml.cs">
+    <Compile Update="UserControls\ChessBoardControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="HomePage.xaml.cs">
+    <Compile Update="Pages\HomePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="LocalGamePage.xaml.cs">
+    <Compile Update="Pages\LocalGamePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="AIGamePage.xaml">
+    <Page Update="Pages\AIGamePage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="ChessBoardControl.xaml">
+    <Page Update="UserControls\ChessBoardControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="HomePage.xaml">
+    <Page Update="Pages\HomePage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Images\XAML\PieceDictionary.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="LocalGamePage.xaml">
+    <Page Update="Pages\LocalGamePage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
