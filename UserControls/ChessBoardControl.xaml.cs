@@ -233,8 +233,86 @@ namespace ChessWPF
                 }
             } else
             {
+                RemovePiece(startIndex);
 
+                if (flag == Move.Flag.PromoteToQueen)
+                {
+                    RemovePiece(endIndex);
+                    if (endIndex > 7)
+                    {
+                        AddPiece(endIndex, Piece.WhiteQueen);
+                    }
+                    else
+                    {
+                        AddPiece(endIndex, Piece.BlackQueen);
+                    }
+                }
             }
+        }
+
+        public void AddPiece(int index, int piece)
+        {
+            Image image = new Image();
+
+            switch (piece)
+            {
+                case Piece.WhitePawn:
+                    image.Source = wPDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.55;
+                    break;
+                case Piece.WhiteKnight:
+                    image.Source = wNDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.80;
+                    break;
+                case Piece.WhiteBishop:
+                    image.Source = wBDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.80;
+                    break;
+                case Piece.WhiteRook:
+                    image.Source = wRDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.70;
+                    break;
+                case Piece.WhiteQueen:
+                    image.Source = wQDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.80;
+                    break;
+                case Piece.WhiteKing:
+                    image.Source = wKDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.80;
+                    break;
+                case Piece.BlackPawn:
+                    image.Source = bPDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.55;
+                    break;
+                case Piece.BlackKnight:
+                    image.Source = bNDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 1.5;
+                    break;
+                case Piece.BlackBishop:
+                    image.Source = bBDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.80;
+                    break;
+                case Piece.BlackRook:
+                    image.Source = bRDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.70;
+                    break;
+                case Piece.BlackQueen:
+                    image.Source = bQDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.80;
+                    break;
+                case Piece.BlackKing:
+                    image.Source = bKDrawingImage;
+                    image.Width = ChessBoardGrid.ColumnDefinitions.ElementAt(0).ActualWidth * 0.80;
+                    break;
+            }
+
+            int column = ConvertIndexToColumnRow(index)[0];
+            int row = ConvertIndexToColumnRow(index)[1];
+
+            PieceList.Add(index, image);
+            ChessBoardGrid.Children.Add(image);
+            Grid.SetColumn(image, column);
+            Grid.SetRow(image, row);
         }
 
         public void RemovePiece(int pieceIndex)

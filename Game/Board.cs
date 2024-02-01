@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -136,37 +137,43 @@ namespace ChessWPF.Game
             int colourToMoveIndex = ColourToMoveIndex();
             int pieceToMove = board[startSquare];
 
+            enPassantFile = -1;
+
             PieceList pieceToMovePieceList;
             PieceList pieceToBeCapturedList;
 
-            if (Piece.PieceType(pieceToMove) == Piece.King)
+            if (board[endSquare] != Piece.None)
             {
-                kingIndex[colourToMoveIndex] = endSquare;
-            } else
-            {
-                pieceToMovePieceList = GetPieceList(colourToMoveIndex, pieceToMove);
-                pieceToMovePieceList.MovePiece(startSquare, endSquare);
+                pieceToBeCapturedList = GetPieceList(1 - colourToMoveIndex, board[endSquare]);
+                pieceToBeCapturedList.RemovePieceAtIndex(endSquare);
             }
 
-            enPassantFile = -1;
             if (move.MoveFlag == Move.Flag.EnPassantCapture)
             {
                 int posOfCapturedPawn = endSquare + (colourToMoveIndex == 0 ? -8 : 8);
 
+                pawns[colourToMoveIndex].MovePiece(startSquare, endSquare);
+                board[endSquare] = board[startSquare];
+                board[startSquare] = Piece.None;
+
                 pawns[1 - colourToMoveIndex].RemovePieceAtIndex(posOfCapturedPawn);
                 board[posOfCapturedPawn] = Piece.None;
-            }
-            if (move.MoveFlag == Move.Flag.PawnTwoForward)
+            } else if (move.MoveFlag == Move.Flag.PawnTwoForward)
             {
-                enPassantFile = BoardRepresentation.FileIndex(startSquare);
-            }
+                pawns[colourToMoveIndex].MovePiece(startSquare, endSquare);
+                board[endSquare] = board[startSquare];
+                board[startSquare] = Piece.None;
 
-            if (move.MoveFlag == Move.Flag.Castling)
+                enPassantFile = BoardRepresentation.FileIndex(startSquare);
+            } else if (move.MoveFlag == Move.Flag.Castling)
             {
+                board[endSquare] = board[startSquare];
+                board[startSquare] = Piece.None;
+
                 if (endSquare == 6 || endSquare == 62)
                 {
                     kingIndex[colourToMoveIndex] = endSquare;
-                    
+
                     if (colourToMoveIndex == 0)
                     {
                         rooks[0].MovePiece(7, 5);
@@ -194,17 +201,54 @@ namespace ChessWPF.Game
                         board[56] = Piece.None;
                     }
                 }
-            }
-
-            if (board[endSquare] != Piece.None)
+            } else if (move.MoveFlag == Move.Flag.PromoteToQueen)
             {
-                int pieceToBeCaptured = board[endSquare];
-                pieceToBeCapturedList = GetPieceList(1 - colourToMoveIndex, pieceToBeCaptured);
-                pieceToBeCapturedList.RemovePieceAtIndex(endSquare);
-            }
+                pawns[colourToMoveIndex].RemovePieceAtIndex(startSquare);
+                queens[colourToMoveIndex].AddPieceAtIndex(endSquare);
 
-            board[endSquare] = board[startSquare];
-            board[startSquare] = Piece.None;
+                if (board[endSquare] != Piece.None)
+                {
+                    int pieceToBeCaptured = board[endSquare];
+                    pieceToBeCapturedList = GetPieceList(1 - colourToMoveIndex, pieceToBeCaptured);
+                    pieceToBeCapturedList.RemovePieceAtIndex(endSquare);
+                }
+
+                board[endSquare] = (colourToMoveIndex == 0) ? Piece.WhiteQueen : Piece.BlackQueen;
+                board[startSquare] = Piece.None;
+            } else if (move.MoveFlag == Move.Flag.PromoteToKnight)
+            {
+                pawns[colourToMoveIndex].RemovePieceAtIndex(startSquare);
+                knights[colourToMoveIndex].AddPieceAtIndex(endSquare);
+
+                board[endSquare] = (colourToMoveIndex == 0) ? Piece.WhiteKnight : Piece.BlackKnight;
+                board[startSquare] = Piece.None;
+            } else if (move.MoveFlag == Move.Flag.PromoteToBishop)
+            {
+                pawns[colourToMoveIndex].RemovePieceAtIndex(startSquare);
+                bishops[colourToMoveIndex].AddPieceAtIndex(endSquare);
+
+                board[endSquare] = (colourToMoveIndex == 0) ? Piece.WhiteBishop : Piece.BlackBishop;
+                board[startSquare] = Piece.None;
+            } else if (move.MoveFlag == Move.Flag.PromoteToRook)
+            {
+                pawns[colourToMoveIndex].RemovePieceAtIndex(startSquare);
+                rooks[colourToMoveIndex].AddPieceAtIndex(endSquare);
+
+                board[endSquare] = (colourToMoveIndex == 0) ? Piece.WhiteRook : Piece.BlackRook;
+                board[startSquare] = Piece.None;
+            } else if (Piece.PieceType(pieceToMove) == Piece.King)
+            {
+                kingIndex[colourToMoveIndex] = endSquare;
+                board[endSquare] = board[startSquare];
+                board[startSquare] = Piece.None;
+            } else
+            {
+                pieceToMovePieceList = GetPieceList(colourToMoveIndex, pieceToMove);
+                pieceToMovePieceList.MovePiece(startSquare, endSquare);
+
+                board[endSquare] = board[startSquare];
+                board[startSquare] = Piece.None;
+            }
 
             isWhiteToMove = !isWhiteToMove;
         }

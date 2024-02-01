@@ -24,7 +24,6 @@ namespace ChessWPF.Game
 
         public void GameLoop()
         {
-            moveGenerator = new MoveGenerator();
             moves = moveGenerator.GenerateMoves(chessBoard);
 
             logger.Info("Number of moves: " + moves.Count);
