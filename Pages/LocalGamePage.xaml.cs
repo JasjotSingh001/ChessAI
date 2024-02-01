@@ -29,7 +29,7 @@ namespace ChessWPF
 
         private ChessGame Game = new ChessGame();
 
-        // -1 represents a not selected stated
+        // -1 represents a not selected state
         private int PreviousSelectedSquare = -1;
         private int NextSelectedSquare = -1;
 
@@ -38,7 +38,6 @@ namespace ChessWPF
             logger.Info("Setting up local game page");
             InitializeComponent();
         }
-
 
         /// <summary>
         /// When the chess board control has loaded we first set up the board which creates the coloured squares,
@@ -59,6 +58,8 @@ namespace ChessWPF
         {
             int index = ChessBoardControl.Grid_HitTest(e);
 
+            if (Game.ChessBoard.GetPiece(index) == Piece.None && PreviousSelectedSquare == -1) return;
+
             if (PreviousSelectedSquare == -1)
             {
                 PreviousSelectedSquare = index;
@@ -68,10 +69,12 @@ namespace ChessWPF
 
                 if (Game.CanMakeMove(PreviousSelectedSquare, NextSelectedSquare))
                 {
-                    ChessBoardControl.MovePiece(PreviousSelectedSquare, NextSelectedSquare);
+                    int flag = Game.MakeMove(PreviousSelectedSquare, NextSelectedSquare);
+
+                    ChessBoardControl.MovePiece(PreviousSelectedSquare, NextSelectedSquare, flag);
                     mediaPlayer.Open(moveUri);
                     mediaPlayer.Play();
-                    logger.Info("Can make move");
+
                     PreviousSelectedSquare = -1;
                     NextSelectedSquare = -1;
                 } else
@@ -82,11 +85,6 @@ namespace ChessWPF
             }
         }
 
-        /// <summary>
-        /// Cancel the moves
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ChessBoardGrid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             PreviousSelectedSquare = -1;

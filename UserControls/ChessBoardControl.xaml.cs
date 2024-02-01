@@ -30,7 +30,9 @@ namespace ChessWPF
         private SolidColorBrush LightColorBrush = (SolidColorBrush) new BrushConverter().ConvertFrom("#F1D9B4");
         private SolidColorBrush DarkColorBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#B48963");
 
-        private bool FromWhitePerspective = false;
+        private Dictionary<int, Image> PieceList = new Dictionary<int, Image>();
+
+        private bool FromWhitePerspective = true;
 
         private DrawingImage bPDrawingImage;
         private DrawingImage bNDrawingImage;
@@ -154,19 +156,92 @@ namespace ChessWPF
                         break;
                 }
 
+                PieceList.Add(i, image);
+
                 ChessBoardGrid.Children.Add(image);
                 Grid.SetColumn(image, column);
                 Grid.SetRow(image, row);
             }
         }
 
-        public void MovePiece(int startIndex, int endIndex)
+        public void MovePiece(int startIndex, int endIndex) //need flags for en passant, castling, etc.
         {
             int[] startColumnRow = ConvertIndexToColumnRow(startIndex);
             int[] endColumnRow = ConvertIndexToColumnRow(endIndex);
 
-            logger.Info("Start: " + startColumnRow[0] + " " + startColumnRow[1]);
-            logger.Info("End: " + endColumnRow[0] + " " + endColumnRow[1]);
+            //hacky solution, consider changing it later
+            Image previousPiece = PieceList.GetValueOrDefault(startIndex);
+            PieceList.Remove(startIndex);
+
+            Image nextPiece = PieceList.GetValueOrDefault(endIndex);
+            PieceList.Remove(endIndex);
+
+            ChessBoardGrid.Children.Remove(nextPiece);
+            Grid.SetColumn(previousPiece, endColumnRow[0]);
+            Grid.SetRow(previousPiece, endColumnRow[1]);
+
+            PieceList.Add(endIndex, previousPiece);
+        }
+
+        public void MovePiece(int startIndex, int endIndex, int flag)
+        {
+            if (flag == 0 || flag == Move.Flag.PawnTwoForward)
+            {
+                int[] startColumnRow = ConvertIndexToColumnRow(startIndex);
+                int[] endColumnRow = ConvertIndexToColumnRow(endIndex);
+
+                //hacky solution, consider changing it later
+                Image previousPiece = PieceList.GetValueOrDefault(startIndex);
+                PieceList.Remove(startIndex);
+
+                Image nextPiece = PieceList.GetValueOrDefault(endIndex);
+                PieceList.Remove(endIndex);
+
+                ChessBoardGrid.Children.Remove(nextPiece);
+                Grid.SetColumn(previousPiece, endColumnRow[0]);
+                Grid.SetRow(previousPiece, endColumnRow[1]);
+
+                PieceList.Add(endIndex, previousPiece);
+            } else if (flag == Move.Flag.EnPassantCapture)
+            {
+                MovePiece(startIndex, endIndex);
+                if (endIndex > startIndex)
+                {
+                    RemovePiece(endIndex - 8);
+                } else
+                {
+                    RemovePiece(endIndex + 8);
+                }
+            } else if (flag == Move.Flag.Castling)
+            {
+                if (endIndex == 6)
+                {
+                    MovePiece(4, 6);
+                    MovePiece(7, 5);
+                } else if (endIndex == 2)
+                {
+                    MovePiece(4, 2);
+                    MovePiece(0, 3);
+                } else if (endIndex == 62)
+                {
+                    MovePiece(60, 62);
+                    MovePiece(63, 61);
+                } else
+                {
+                    MovePiece(60, 58);
+                    MovePiece(56, 59);
+                }
+            } else
+            {
+
+            }
+        }
+
+        public void RemovePiece(int pieceIndex)
+        {
+            Image pieceToBeRemoved = PieceList.GetValueOrDefault(pieceIndex);
+            PieceList.Remove(pieceIndex);
+            ChessBoardGrid.Children.Remove(pieceToBeRemoved);
         }
 
         public int Grid_HitTest (MouseEventArgs e)
@@ -177,7 +252,7 @@ namespace ChessWPF
             int row = Grid.GetRow(element);
 
             logger.Info(column + " " + row);
-            logger.Info("Conversion: " + ConvertColumnRowToIndex(column, row));
+            //logger.Info("Conversion: " + ConvertColumnRowToIndex(column, row));
 
             return ConvertColumnRowToIndex(column, row);
         }
