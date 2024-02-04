@@ -40,9 +40,10 @@ namespace ChessWPF.Game
         public List<Move> GenerateMoves(Board board, bool includeQuietMoves = true)
         {
             this.board = board;
-            //this.includeQuietMoves = includeQuietMoves;
+            this.includeQuietMoves = includeQuietMoves;
 
             ResetData();
+            logger.Info(isWhiteToMove); //check this
 
             CalculateAttackData();
             GenerateKingMoves();
@@ -643,6 +644,11 @@ namespace ChessWPF.Game
         public List<Move> GetMoves()
         {
             return moves;
+        }
+
+        public bool InCheck
+        {
+            get { return inCheck; }
         }
     }
 }

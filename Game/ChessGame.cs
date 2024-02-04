@@ -13,6 +13,7 @@ namespace ChessWPF.Game
         public const string StartFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
         private Board chessBoard = new Board();
+
         private MoveGenerator moveGenerator;
         private List<Move> moves = new List<Move>();
         public ChessGame()
@@ -68,9 +69,54 @@ namespace ChessWPF.Game
             return 0;
         }
 
+        public void MakeMove(Move move)
+        {
+            //Move moveWithAnyFlags;
+
+            /*if (CanMakeMove(startIndex, endIndex))
+            {
+                Move move = new Move(startIndex, endIndex);
+                moveWithAnyFlags = moves.First(move1 => move1.StartSquare == move.StartSquare && move1.EndSquare == move.EndSquare);
+
+                logger.Info("flag: " + moveWithAnyFlags.MoveFlag);
+
+                chessBoard.MakeMove(moveWithAnyFlags);
+                GameLoop();
+
+                return moveWithAnyFlags.MoveFlag;
+            }*/
+
+            chessBoard.MakeMove(move);
+            GameLoop();
+        }
+
         public Board ChessBoard
         {
             get { return chessBoard; }
+        }
+
+        public int ColourToMoveIndex
+        {
+            get
+            {
+                return chessBoard.ColourToMoveIndex();
+            }
+        }
+
+        public bool WhiteToMove
+        {
+            get
+            {
+                return chessBoard.IsWhiteToMove();
+            }
+        }
+
+        public List<Move> Moves
+        {
+            get
+            {
+                return moves;
+            }
         }
     }
 }
