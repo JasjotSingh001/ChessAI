@@ -79,6 +79,14 @@ namespace ChessWPF.Game
             }
         }
 
+        public static Move InvalidMove
+        {
+            get
+            {
+                return new Move(0);
+            }
+        }
+
         public string ConvertToBinary()
         {
             return Convert.ToString(startSquareMask & endSquareMask, 2);

@@ -135,9 +135,9 @@ namespace ChessWPF.Game
             int capturedPiece = Piece.None;
             GameState currentGameState = new GameState(
                 canWhiteCastleKingside, canWhiteCastleQueenside, canBlackCastleKingside, canBlackCastleQueenside,
-                enPassantFile, capturedPiece, fiftyMoveCounter
+                enPassantFile, capturedPiece
             );
-            //gameStateHistory.Push(currentGameState);
+            gameStateHistory.Push(currentGameState);
         }
 
         public void MakeMove(Move move)
@@ -152,15 +152,11 @@ namespace ChessWPF.Game
 
             enPassantFile = -1;
 
-            PieceList pieceToMovePieceList = new PieceList();
-            PieceList pieceToBeCapturedList = new PieceList();
-
             if (board[endSquare] != Piece.None)
             {
                 capturedPiece = board[endSquare];
                 this.capturedPiece = capturedPiece;
-                pieceToBeCapturedList = GetPieceList(1 - colourToMoveIndex, board[endSquare]);
-                pieceToBeCapturedList.RemovePieceAtIndex(endSquare);
+                GetPieceList(1 - colourToMoveIndex, board[endSquare]).RemovePieceAtIndex(endSquare);
 
                 if (Piece.PieceType(capturedPiece) == Piece.Rook)
                 {
@@ -316,8 +312,7 @@ namespace ChessWPF.Game
                     }
                 } else
                 {
-                    pieceToMovePieceList = GetPieceList(colourToMoveIndex, pieceToMove);
-                    pieceToMovePieceList.MovePiece(startSquare, endSquare);
+                    GetPieceList(colourToMoveIndex, pieceToMove).MovePiece(startSquare, endSquare);
                 }
 
                 board[endSquare] = board[startSquare];
@@ -326,7 +321,7 @@ namespace ChessWPF.Game
 
             GameState currentGameState = new GameState(
                 canWhiteCastleKingside, canWhiteCastleQueenside, canBlackCastleKingside, canBlackCastleQueenside,
-                enPassantFile, capturedPiece, fiftyMoveCounter
+                enPassantFile, capturedPiece
             );
             gameStateHistory.Push(currentGameState);
 
@@ -345,16 +340,13 @@ namespace ChessWPF.Game
             canBlackCastleQueenside = currentGameState1.CanBlackCastleQueenside;
 
             enPassantFile = currentGameState1.EnpassantFile;
-            fiftyMoveCounter = currentGameState1.FiftyMoveCounter;
+            //fiftyMoveCounter = currentGameState1.FiftyMoveCounter;
             capturedPiece = currentGameState1.CapturedPiece;
 
             int startSquare = move.StartSquare;
             int endSquare = move.EndSquare;
             int pieceToMove = board[endSquare];
             int colourToMoveIndex = ColourToMoveIndex();
-
-            PieceList pieceToMovePieceList = new PieceList();
-            PieceList pieceToBeCapturedList = new PieceList();
 
             if (move.MoveFlag == Move.Flag.EnPassantCapture)
             {
@@ -488,16 +480,14 @@ namespace ChessWPF.Game
                 board[startSquare] = board[endSquare];
                 board[endSquare] = Piece.None;
 
-                pieceToMovePieceList = GetPieceList(colourToMoveIndex, pieceToMove);
-                pieceToMovePieceList.MovePiece(endSquare, startSquare);
+                GetPieceList(colourToMoveIndex, pieceToMove).MovePiece(endSquare, startSquare);
             }
 
             if (capturedPiece != Piece.None)
             {
                 logger.Info(endSquare);
                 board[endSquare] = capturedPiece;
-                pieceToBeCapturedList = GetPieceList(1 - colourToMoveIndex, capturedPiece);
-                pieceToBeCapturedList.AddPieceAtIndex(endSquare);
+                GetPieceList(1 - colourToMoveIndex, capturedPiece).AddPieceAtIndex(endSquare);
             }
 
             gameStateHistory.Pop();
@@ -509,7 +499,7 @@ namespace ChessWPF.Game
             canBlackCastleQueenside = currentGameState.CanBlackCastleQueenside;
 
             enPassantFile = currentGameState.EnpassantFile;
-            fiftyMoveCounter = currentGameState.FiftyMoveCounter;
+            //fiftyMoveCounter = currentGameState.FiftyMoveCounter;
             capturedPiece = currentGameState.CapturedPiece;
         }
 
@@ -535,31 +525,21 @@ namespace ChessWPF.Game
 
         public PieceList GetPieceList(int colourIndex, int pieceType)
         {
-            PieceList pieceList;
-
             switch (Piece.PieceType(pieceType))
             {
                 case Piece.Pawn:
-                    pieceList = pawns[colourIndex];
-                    break;
+                    return pawns[colourIndex];
                 case Piece.Knight:
-                    pieceList = knights[colourIndex];
-                    break;
+                    return knights[colourIndex];
                 case Piece.Bishop: 
-                    pieceList = bishops[colourIndex];
-                    break;
+                    return bishops[colourIndex];
                 case Piece.Rook:
-                    pieceList = rooks[colourIndex];
-                    break;
+                    return rooks[colourIndex];
                 case Piece.Queen:
-                    pieceList = queens[colourIndex];
-                    break;
-                default:
-                    pieceList = queens[colourIndex]; 
-                    break;
+                    return queens[colourIndex];
             }
             
-            return pieceList;
+            return rooks[colourIndex];
         }
 
         public Move GetPreviousMove()

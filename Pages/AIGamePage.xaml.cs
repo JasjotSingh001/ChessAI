@@ -2,8 +2,10 @@
 using ChessWPF.Game;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,6 +37,8 @@ namespace ChessWPF
         // -1 represents a not selected state
         private int PreviousSelectedSquare = -1;
         private int NextSelectedSquare = -1;
+
+        private BackgroundWorker backgroundWorker = new BackgroundWorker();
 
         public AIGamePage()
         {
@@ -86,8 +90,9 @@ namespace ChessWPF
 
                     if (!aiGameHandler.IsGameOver)
                     {
-                        Move move = aiGameHandler.ChooseMove();
-                        DisplayAIMove(move);
+                        aiGameHandler.MoveGenerationTest();
+                        //Move move = aiGameHandler.ChooseMove();
+                        //DisplayAIMove(move);
                     } else
                     {
 

@@ -65,6 +65,12 @@ namespace ChessWPF.AI
             chessGame.MakeMove(move);
         }
 
+        public void MoveGenerationTest()
+        {
+            Search search = new Search(new ChessGame().ChessBoard);
+            logger.Info(search.MoveGenerationTest(4));
+        }
+
         public bool WhiteToMove
         {
             get
