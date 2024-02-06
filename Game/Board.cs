@@ -137,7 +137,7 @@ namespace ChessWPF.Game
                 canWhiteCastleKingside, canWhiteCastleQueenside, canBlackCastleKingside, canBlackCastleQueenside,
                 enPassantFile, capturedPiece
             );
-            gameStateHistory.Push(currentGameState);
+            //gameStateHistory.Push(currentGameState);
         }
 
         public void MakeMove(Move move)

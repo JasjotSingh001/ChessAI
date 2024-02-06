@@ -90,9 +90,9 @@ namespace ChessWPF
 
                     if (!aiGameHandler.IsGameOver)
                     {
-                        aiGameHandler.MoveGenerationTest();
-                        //Move move = aiGameHandler.ChooseMove();
-                        //DisplayAIMove(move);
+                        //aiGameHandler.MoveGenerationTest();
+                        Move move = aiGameHandler.ChooseMove();
+                        DisplayAIMove(move);
                     } else
                     {
 

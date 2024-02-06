@@ -32,6 +32,7 @@ namespace ChessWPF.AI
             if (move.moveValue == 0b0000000000000000)
             {
                 logger.Info("Invalid move");
+                System.Environment.Exit(0);
                 move = ChooseRandomMove();
             } else
             {
