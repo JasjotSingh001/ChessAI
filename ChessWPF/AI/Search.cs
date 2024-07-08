@@ -46,6 +46,7 @@ namespace ChessWPF.AI
             if (depth == 0)
             {
                 return evaluation.Evaluate(board);
+                //return QuiescenceSearch(alpha, beta);
             }
 
             List<Move> moves = moveGenerator.GenerateMoves(board);
