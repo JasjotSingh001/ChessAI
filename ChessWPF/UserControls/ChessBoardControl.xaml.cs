@@ -1,5 +1,5 @@
 ﻿using ChessWPF.Game;
-using ChessWPF.Interface;
+//using ChessWPF.Interface;
 using NLog;
 using System;
 using System.Collections.Generic;
